@@ -64,7 +64,7 @@ Existing process environment variables take precedence.
 | Variable | Value |
 | --- | --- |
 | `RECALL_API_KEY` | REST API key for the same Recall workspace where you configured Grok. |
-| `RECALL_API_BASE_URL` | Matching regional API URL; the example uses `https://us-east-1.recall.ai/api/v1`. |
+| `RECALL_API_BASE_URL` | Matching regional API URL; the example uses `https://us-west-2.recall.ai/api/v1`. |
 | `GROK_PUBLIC_URL` | The tunnel's HTTPS origin, without a path or trailing slash. |
 | `GROK_VOICE` | xAI voice ID; the example uses `ara`. |
 | `SESSION_TIMEOUT_SECONDS` | Overall session limit; defaults to `600` seconds. |
