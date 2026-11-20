@@ -131,7 +131,7 @@ class MeetingTools:
         """Stop sharing while preserving conversation and the last page URL."""
         self._require_active()
         await self._call_recall(self.client.stop_screenshare(self.bot_id))
-        await self._post_status("Stopped sharing.")
+        await self._post_status("Screen share stop requested.")
         return "Recall accepted the request to stop sharing."
 
     async def leave_call(self) -> str:

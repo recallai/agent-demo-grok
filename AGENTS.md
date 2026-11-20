@@ -9,8 +9,8 @@ Keep this a small, runnable Google Meet demo with a local meeting-URL form.
 - Require explicit participant requests in the agent instructions. Addressing the
   agent as `Assistant` or `grok demo` is a model instruction, not a deterministic
   audio filter. Do not promise mute, listening controls, or an avatar.
-- Instruct the agent to join quietly. Post one short introduction in meeting chat
-  and wait for addressed requests. Intro failures must not end the session or retry.
+- Instruct the agent to join quietly and wait for addressed requests. Use Recall's
+  `chat.on_bot_join` to post one short introduction in meeting chat.
 - Each accepted tool posts chat feedback. Requested text and links are their own
   feedback. Never repeat or undo an action because a feedback message failed.
 - Show public HTTPS webpages without reading or interacting with them. Preserve

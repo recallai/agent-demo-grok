@@ -43,7 +43,9 @@ class MeetingSessions:
         try:
             # The provider can discover MCP tools before Create Bot returns its ID.
             async with session.lock:
-                bot_id = await client.create_bot(meeting_url, grok_config(session.token))
+                bot_id = await client.create_bot(
+                    meeting_url, grok_config(session.token), join_message=INTRODUCTION,
+                )
                 session.tools = MeetingTools(client, bot_id, MeetingState())
                 session.ready.set()
             session.monitor = asyncio.create_task(self._watch_meeting(session))
@@ -80,8 +82,7 @@ class MeetingSessions:
         return result
 
     async def _watch_meeting(self, session: MeetingSession) -> None:
-        """Send the introduction once after admission; expire access after departure."""
-        intro_attempted = False
+        """Revoke tool access after the bot leaves or the session expires."""
         ended = False
         try:
             while time.monotonic() < session.expires_at:
@@ -93,12 +94,6 @@ class MeetingSessions:
                         if status in {"call_ended", "done", "fatal", "media_expired"}:
                             ended = True
                             return
-                        if status in {"in_call_not_recording", "in_call_recording"} and not intro_attempted:
-                            intro_attempted = True
-                            try:
-                                await session.client.send_chat_message(session.tools.bot_id, INTRODUCTION)
-                            except RecallError:
-                                logger.warning("Could not post the introduction; not retrying")
                 except RecallError:
                     logger.warning("Could not read bot status; session expiration remains active")
                 await asyncio.sleep(min(5, max(0, session.expires_at - time.monotonic())))

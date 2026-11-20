@@ -9,9 +9,9 @@ provides five meeting tools.
 ## Behavior
 
 Address the agent as **“Assistant”** or **“grok demo”**, followed by a question or
-command. The agent is instructed to join quietly and wait until addressed; the
-app posts a short introduction in meeting chat. This address rule is a model
-instruction, not an enforced audio filter.
+command. The agent is instructed to join quietly and wait until addressed. Recall
+posts a short introduction in meeting chat using `chat.on_bot_join`. The address
+rule relies on the model following its instructions. [Recall chat configuration](https://docs.recall.ai/docs/sending-chat-messages)
 
 | Action | Tool |
 | --- | --- |
@@ -32,8 +32,7 @@ own confirmation. Sharing a page does not automatically post its link.
 - An HTTPS tunnel, such as cloudflared, to expose the tool server.
 - A Google account to host the meeting.
 
-The sample does not require a separate avatar service. It has no mute or listening
-controls because the native connection does not expose those controls to this app.
+The sample uses native Grok audio without an avatar.
 
 ## Quickstart
 
@@ -119,10 +118,12 @@ Try these phrases:
 | “Assistant, show https://www.recall.ai.” |
 | “Assistant, send that link in chat.” |
 | “Assistant, stop sharing.” |
+| “Assistant, send that link in chat again.” |
 | “Assistant, leave the meeting.” |
 
-Check the meeting itself for the page, chat messages, and bot departure. A tool
-result confirms Recall accepted a request; it does not prove the page rendered.
+Check the meeting for the page, the exact link before and after stopping the
+share, the chat messages, and the bot’s departure. A tool result confirms that
+Recall accepted the request. Check the meeting view to verify the page rendered.
 
 After the bot leaves, stop both terminal processes with Ctrl+C. Sessions expire
 after 10 minutes by default. The app requests departure when a session expires
@@ -146,9 +147,12 @@ The Grok session receives instructions, a voice, and a remote MCP tool descripto
 The app keeps the bot ID returned by Create Bot on the server and scopes each
 MCP token to that meeting. Tool callers cannot choose another bot ID.
 
-Screen sharing uses Recall's [Output Media API](https://docs.recall.ai/reference/bot_output_media_create)
-with a public webpage URL. The most recently accepted URL remains available after
-sharing stops and is not replaced when a later request fails.
+The start and stop tools use Recall's Output Media API. Start sets only the
+`screenshare` target to a webpage. Stop sends `{"screenshare": true}` and keeps
+Grok audio connected. Both chat tools use Send Chat Message with `to: "everyone"`.
+The link tool reads the last accepted page URL from session state, even after
+sharing stops. The leave tool posts a final chat message and then calls Remove
+Bot From Call with no request body. [Recall meeting tool guide](https://docs.recall.ai/docs/meeting-agents-adding-tools-to-your-meeting-agents)
 
 ## Boundaries and troubleshooting
 

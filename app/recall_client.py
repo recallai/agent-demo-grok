@@ -83,7 +83,7 @@ class RecallClient:
     def _bot_path(bot_id: str, endpoint: str) -> str:
         return f"bot/{UUID(bot_id)}/{endpoint}/"
 
-    async def create_bot(self, meeting_url: str, config: dict) -> str:
+    async def create_bot(self, meeting_url: str, config: dict, *, join_message: str) -> str:
         result = await self._request(
             "POST", "bot/", "the meeting agent request",
             {
@@ -91,6 +91,7 @@ class RecallClient:
                 "bot_name": BOT_NAME,
                 "variant": {"google_meet": "web_4_core"},
                 "output_media": {"audio": {"kind": "grok", "config": config}},
+                "chat": {"on_bot_join": {"send_to": "everyone", "message": join_message}},
             },
             read_json=True,
         )
