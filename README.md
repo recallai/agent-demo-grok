@@ -1,4 +1,4 @@
-# Grok meeting agent
+# agent-demo-grok
 
 A small Google Meet demo using Recall's native Grok audio integration and
 [xAI's Voice Agent API](https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech).
@@ -36,12 +36,11 @@ The sample uses native Grok audio without an avatar.
 
 ## Quickstart
 
-### 1. Install dependencies
-
-From the directory containing the downloaded `grok-meeting-agent` folder:
+### 1. Clone the repository and install dependencies
 
 ```sh
-cd grok-meeting-agent
+git clone https://github.com/recallai/agent-demo-grok.git
+cd agent-demo-grok
 uv sync --locked
 ```
 
