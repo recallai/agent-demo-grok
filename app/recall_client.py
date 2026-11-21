@@ -104,7 +104,10 @@ class RecallClient:
             },
             "output_media": {"audio": {"kind": "grok", "config": config}},
         }
-        host = urlsplit(meeting_url).hostname or ""
+        try:
+            host = urlsplit(meeting_url).hostname or ""
+        except ValueError:
+            host = ""  # Let Create Bot handle malformed links.
         if host != "webex.com" and not host.endswith(".webex.com"):
             payload["chat"] = {"on_bot_join": {"send_to": "everyone", "message": join_message}}
         result = await self._request("POST", "bot/", "the meeting agent request", payload, read_json=True)
