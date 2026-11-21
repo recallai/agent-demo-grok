@@ -1,6 +1,6 @@
 # agent-demo-grok
 
-Send an interactive meeting agent to Zoom, Google Meet, Microsoft Teams, or Webex.
+Send an interactive meeting agent to Google Meet, Zoom, Microsoft Teams, or Webex.
 It answers questions aloud and takes spoken requests to share a webpage, post in
 meeting chat where available, or leave the call.
 
@@ -105,8 +105,7 @@ Keep this process running alongside the tunnel, then open
 
 ### 5. Send the agent to a meeting
 
-Paste a Zoom, Google Meet, Microsoft Teams, or Webex link into the launcher and
-select **Send agent**. Admit **grok demo** if it enters the waiting room.
+For your first test, start a Google Meet call at [meet.new](https://meet.new/). You can also use a link from any supported platform. Paste the direct meeting link into the launcher, select **Send agent**, and admit **grok demo** if prompted.
 
 ### 6. Try the agent
 
