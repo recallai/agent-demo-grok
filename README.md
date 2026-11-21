@@ -105,12 +105,11 @@ Keep this process running alongside the tunnel, then open
 
 ### 5. Send the agent to a meeting
 
-For your first test, start a Google Meet call at [meet.new](https://meet.new/). You can also use a link from any supported platform. Paste the direct meeting link into the launcher, select **Send agent**, and admit **grok demo** if prompted.
+For your first test, start a Google Meet call at [meet.new](https://meet.new/). Paste the direct meeting link into the launcher, select **Send agent**, and admit **grok demo** if prompted.
 
 ### 6. Try the agent
 
-Try these phrases. Use Zoom, Google Meet, or Microsoft Teams for the chat
-commands. [Recall chat support](https://docs.recall.ai/docs/sending-chat-messages)
+Try the chat commands in a meeting that allows bot chat. [Recall chat support](https://docs.recall.ai/docs/sending-chat-messages)
 
 | Try saying |
 | --- |
@@ -124,9 +123,10 @@ commands. [Recall chat support](https://docs.recall.ai/docs/sending-chat-message
 | “Assistant, send that link in chat again.” |
 | “Assistant, leave the meeting.” |
 
-Check the meeting for the page, the exact link before and after stopping the
-share, the chat messages, and the bot’s departure. A tool result confirms that
-Recall accepted the request. Check the meeting view to verify the page rendered.
+Check the meeting view to verify that the page rendered and that the bot leaves
+when asked. When chat is available, check the messages and the exact link before
+and after stopping the share. A tool result confirms that Recall accepted the
+request.
 
 After the bot leaves, stop both terminal processes with Ctrl+C. Sessions expire
 after 10 minutes by default. The app requests departure when a session expires
