@@ -139,7 +139,6 @@ or the app shuts down. Start another bot to repeat the demo.
 | --- | --- |
 | `app/web.py` | Serve the local form, create a bot, and run the two HTTP servers. |
 | `app/templates/index.html` | One-field meeting launcher. |
-| `app/meeting_url.py` | Validate links for the supported meeting platforms. |
 | `app/config.py` | Load and validate local configuration. |
 | `app/agent.py` | Grok instructions and native provider configuration. |
 | `app/recall_client.py` | Recall HTTP requests and actionable errors. |
