@@ -1,16 +1,14 @@
 """Run the local meeting launcher and the separately tunneled MCP server."""
 
 import asyncio
-import re
 import signal
 from contextlib import asynccontextmanager, contextmanager
-from urllib.parse import urlsplit
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import FileResponse
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict
 
 from app.config import ROOT
 from app.recall_client import RecallError
@@ -32,19 +30,9 @@ pending_meetings: set[str] = set()
 
 
 class MeetingRequest(BaseModel):
-    meeting_url: str
+    model_config = ConfigDict(str_strip_whitespace=True)
 
-    @field_validator("meeting_url")
-    @classmethod
-    def validate_meeting_url(cls, value: str) -> str:
-        parsed = urlsplit(value.strip())
-        if (
-            parsed.scheme != "https"
-            or parsed.netloc != "meet.google.com"
-            or not re.fullmatch(r"/[a-z]{3}-[a-z]{4}-[a-z]{3}/?", parsed.path)
-        ):
-            raise ValueError("Enter a Google Meet URL, such as https://meet.google.com/abc-defg-hij.")
-        return f"https://meet.google.com{parsed.path.rstrip('/')}"
+    meeting_url: str
 
 
 @app.get("/")
@@ -61,7 +49,7 @@ async def create_meeting_agent(request: MeetingRequest):
         bot_id = await sessions.launch(request.meeting_url)
         return {
             "bot_id": bot_id,
-            "message": "Agent requested. Admit grok demo in Google Meet if prompted.",
+            "message": "Agent requested. Admit grok demo if prompted.",
         }
     except ValueError as error:
         raise HTTPException(503, str(error)) from None
