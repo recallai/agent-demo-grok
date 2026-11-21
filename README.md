@@ -1,17 +1,21 @@
 # agent-demo-grok
 
-A small Google Meet demo using Recall's native Grok audio integration and
-[xAI's Voice Agent API](https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech).
-Recall connects meeting audio directly to Grok. A small authenticated
-[MCP server](https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech#remote-mcp-tools)
-provides five meeting tools.
+Send an interactive meeting agent to Zoom, Google Meet, Microsoft Teams, or Webex.
+It answers questions aloud and takes spoken requests to share a webpage, post in
+meeting chat where available, or leave the call.
+
+Recall connects meeting audio directly to Grok using xAI's Voice Agent API. The
+app runs the five meeting tools on an authenticated MCP server. See [xAI's Voice
+Agent API](https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech)
+and [remote MCP tools](https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech#remote-mcp-tools).
 
 ## Behavior
 
 Address the agent as **“Assistant”** or **“grok demo”**, followed by a question or
-command. The agent is instructed to join quietly and wait until addressed. Recall
-posts a short introduction in meeting chat using `chat.on_bot_join`. The address
-rule relies on the model following its instructions. [Recall chat configuration](https://docs.recall.ai/docs/sending-chat-messages)
+command. The agent is instructed to join quietly and wait until addressed. On
+platforms with meeting chat, Recall posts a short introduction using
+`chat.on_bot_join`. The address rule relies on the model following its
+instructions. [Recall chat configuration](https://docs.recall.ai/docs/sending-chat-messages)
 
 | Action | Tool |
 | --- | --- |
@@ -21,8 +25,9 @@ rule relies on the model following its instructions. [Recall chat configuration]
 | Stop the screen share | `stop_screenshare()` |
 | Leave the meeting | `leave_call()` |
 
-Each accepted tool posts feedback in chat. Requested messages and links are their
-own confirmation. Sharing a page does not automatically post its link.
+Where chat is available, each accepted tool posts feedback there. Requested
+messages and links are their own confirmation. Sharing a page does not
+automatically post its link.
 
 ## Requirements
 
@@ -30,7 +35,7 @@ own confirmation. Sharing a page does not automatically post its link.
 - A Recall workspace and its regional REST API key.
 - An xAI API key with access to the Voice Agent API, saved in the Recall dashboard.
 - An HTTPS tunnel, such as cloudflared, to expose the tool server.
-- A Google account to host the meeting.
+- A meeting link and permission to admit the bot if prompted.
 
 The sample uses native Grok audio without an avatar.
 
@@ -100,13 +105,13 @@ Keep this process running alongside the tunnel, then open
 
 ### 5. Send the agent to a meeting
 
-Create and join a meeting at [meet.new](https://meet.new/). Paste its URL into the
-launcher and select **Send agent**, then admit **grok demo** once it enters the
-waiting room.
+Paste a Zoom, Google Meet, Microsoft Teams, or Webex link into the launcher and
+select **Send agent**. Admit **grok demo** if it enters the waiting room.
 
 ### 6. Try the agent
 
-Try these phrases:
+Try these phrases. Use Zoom, Google Meet, or Microsoft Teams for the chat
+commands. [Recall chat support](https://docs.recall.ai/docs/sending-chat-messages)
 
 | Try saying |
 | --- |
@@ -134,6 +139,7 @@ or the app shuts down. Start another bot to repeat the demo.
 | --- | --- |
 | `app/web.py` | Serve the local form, create a bot, and run the two HTTP servers. |
 | `app/templates/index.html` | One-field meeting launcher. |
+| `app/meeting_url.py` | Validate links for the supported meeting platforms. |
 | `app/config.py` | Load and validate local configuration. |
 | `app/agent.py` | Grok instructions and native provider configuration. |
 | `app/recall_client.py` | Recall HTTP requests and actionable errors. |
@@ -141,7 +147,8 @@ or the app shuts down. Start another bot to repeat the demo.
 | `app/sessions.py` | Per-meeting authorization, expiry, departure monitoring, and cleanup. |
 | `app/tool_server.py` | Authenticated MCP tool definitions and dispatch. |
 
-Recall creates a four-core Google Meet bot with `output_media.audio.kind = "grok"`.
+Recall creates a four-core bot on each supported platform using
+`output_media.audio.kind = "grok"`.
 The Grok session receives instructions, a voice, and a remote MCP tool descriptor.
 The app keeps the bot ID returned by Create Bot on the server and scopes each
 MCP token to that meeting. Tool callers cannot choose another bot ID.
@@ -150,7 +157,7 @@ The start and stop tools use Recall's Output Media API. Start sets only the
 `screenshare` target to a webpage. Stop sends `{"screenshare": true}` and keeps
 Grok audio connected. Both chat tools use Send Chat Message with `to: "everyone"`.
 The link tool reads the last accepted page URL from session state, even after
-sharing stops. The leave tool posts a final chat message and then calls Remove
+sharing stops. The leave tool attempts a final chat message and then calls Remove
 Bot From Call with no request body. [Recall meeting tool guide](https://docs.recall.ai/docs/meeting-agents-adding-tools-to-your-meeting-agents)
 
 ## Boundaries and troubleshooting

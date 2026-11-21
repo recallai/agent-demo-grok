@@ -1,7 +1,8 @@
 # Working on this sample
 
-Keep this a small, runnable Google Meet demo with a local meeting-URL form.
+Keep this a small, runnable meeting agent demo with a local meeting-URL form.
 
+- Launch `web_4_core` bots on Zoom, Google Meet, Microsoft Teams, and Webex.
 - Use Recall's native Grok audio integration: `output_media.audio.kind = "grok"`.
   Grok receives meeting audio directly and calls this app's hosted MCP tools.
 - Keep exactly five conversational tools: `start_screenshare`, `send_chat_message`,
@@ -10,9 +11,10 @@ Keep this a small, runnable Google Meet demo with a local meeting-URL form.
   agent as `Assistant` or `grok demo` is a model instruction, not a deterministic
   audio filter. Do not promise mute, listening controls, or an avatar.
 - Instruct the agent to join quietly and wait for addressed requests. Use Recall's
-  `chat.on_bot_join` to post one short introduction in meeting chat.
-- Each accepted tool posts chat feedback. Requested text and links are their own
-  feedback. Never repeat or undo an action because a feedback message failed.
+  `chat.on_bot_join` to post one short introduction on platforms with meeting chat.
+- Each accepted tool posts feedback where chat is available. Requested text and
+  links are their own feedback. Never repeat or undo an action because a feedback
+  message failed.
 - Show public HTTPS webpages without reading or interacting with them. Preserve
   the last accepted URL when a later share fails. Stop only the screen share.
 - Post a departure message before leaving. Leaving removes only this bot.
